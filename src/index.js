@@ -4,8 +4,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Login from './pages/login.js';
 import HomeScreen from './pages/homeScreen.js';
+import Register from './pages/register.js';
+import SobreNos from './pages/sobreNos.js';
+
 
 const Stack = createStackNavigator();
+
 
 export default function App(){
     return(
@@ -13,6 +17,9 @@ export default function App(){
             <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
                 <Stack.Screen name="Login" component={Login}/>
                 <Stack.Screen name="HomeScreen" component={HomeScreen}/>
+                <Stack.Screen name="Register" component={Register}/>
+                <Stack.Screen name="SobreNos" component={SobreNos}/>
+
             </Stack.Navigator>
         </NavigationContainer>
     );
