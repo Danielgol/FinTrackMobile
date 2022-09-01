@@ -2,12 +2,12 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Login from './pages/login.js';
+import Login from './pages/login/login.js';
 import HomeScreen from './pages/homeScreen.js';
 import CreateGrupo from './pages/createGrupo.js';
 import CreateMaleta from './pages/createMaleta.js';
 import History from './pages/history.js';
-import Bag from './pages/bag.js';
+import Maleta from './pages/maleta.js';
 import Register from './pages/register.js';
 import SobreNos from './pages/sobreNos.js';
 
@@ -19,7 +19,7 @@ export default function App(){
             <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
                 <Stack.Screen name="Login" component={Login}/>
                 <Stack.Screen name="HomeScreen" component={HomeScreen}/>
-                <Stack.Screen name="Bag" component={Bag}/>
+                <Stack.Screen name="Maleta" component={Maleta}/>
                 <Stack.Screen name="History" component={History}/>
                 <Stack.Screen name="CreateMaleta" component={CreateMaleta}/>
                 <Stack.Screen name="CreateGrupo" component={CreateGrupo}/>

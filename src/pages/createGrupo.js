@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, StatusBar, TextInput,
         Dimensions, Image, Animated } from 'react-native';
 
 import seta from '../images/seta3-verde.png';
+import grupo from '../images/grupo-verde.png';
 import CurrencyPopup from '../components/currencyPopup.js';
 
 const { width, height } = Dimensions.get("screen");
@@ -20,7 +21,7 @@ export default class CreateGrupo extends React.Component{
             prefix: 'BRL',
             precision: 2,
             showCurrencies: false,
-            bags: this.props.route.params.bags,
+            maletas: this.props.route.params.maletas,
             selecteds: [],
         }
         this.popUpScale = new Animated.Value(0);
@@ -31,8 +32,8 @@ export default class CreateGrupo extends React.Component{
     }
 
     componentWillUnmount(){
-        const params = this.props.route.params;
-        params.refresh();
+        //const params = this.props.route.params;
+        //params.refresh();
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     }
 
@@ -93,7 +94,8 @@ export default class CreateGrupo extends React.Component{
         return parseFloat(item.value).toFixed(this.getPrecision(item))
     }
 
-    postUpdate(name, prefix, bags){
+    postUpdate(name, prefix, maletas){
+        /*
         fetch('http://192.168.0.182:3000/postCreateCounter', {
             method: 'POST',
             headers: {
@@ -103,12 +105,13 @@ export default class CreateGrupo extends React.Component{
             body: JSON.stringify({
                 name: name,
                 prefix: prefix,
-                bags: bags,
+                maletas: maletas,
             })
         }).then(response => {
         }).catch(error => {
             console.error(error);
         });
+        */
     }
 
     pressCreate(){
@@ -139,10 +142,10 @@ export default class CreateGrupo extends React.Component{
     handleCheckBox(item){
         var list = this.state.selecteds;
 
-        if(list.includes(item.key)) {
-            this.state.selecteds = list.filter(elem => elem !== item.key);
+        if(list.includes(item.name)) {
+            this.state.selecteds = list.filter(elem => elem !== item.name);
         }else{
-            list = list.push(item.key);
+            list = list.push(item.name);
         }
         this.setState({});
     }
@@ -176,6 +179,14 @@ export default class CreateGrupo extends React.Component{
                         }}>
                         <Image source={seta} style={{height: 30, width: 30}}/>
                     </TouchableOpacity>
+                    {/*
+                    <View style={[styles.middle, {fontWeight: 'bold'}]}>
+                        <Image source={grupo} style={{height: 40, width: 40}}/>
+                        <Text style={{color: '#AEE637', fontSize: width/22}}>
+                            Criação de Grupo
+                        </Text>
+                    </View>
+                    */}
                 </View>
 
 
@@ -185,7 +196,7 @@ export default class CreateGrupo extends React.Component{
 
                         <View style={{top: 10, height: 30}}>
                             <Text style={{color: '#AEE637', fontSize: width*0.04}}>
-                                Digite o nome do Contador:
+                                Digite o nome do Grupo:
                             </Text>
                         </View>
 
@@ -213,17 +224,17 @@ export default class CreateGrupo extends React.Component{
                                 Selecione
                             </Text>
                             <Text style={{color: '#AEE637', fontSize: width*0.04}}>
-                                as Maletas do Contador:
+                                as Maletas do Grupo:
                             </Text>
                         </View>
 
                         <View style={{top: 50, height: '55%'}}>
                             <FlatList
-                                data={this.state.bags}
+                                data={this.state.maletas}
                                 renderItem={({ item }) => (
                                 <TouchableOpacity
                                     style={[styles.botao, {
-                                        backgroundColor: this.state.selecteds.includes(item.key) ? 
+                                        backgroundColor: this.state.selecteds.includes(item.name) ? 
                                         '#40970A' : '#606060'
                                     }]}
                                     onPress={() => this.handleCheckBox(item)}
@@ -233,6 +244,7 @@ export default class CreateGrupo extends React.Component{
                                     </View>
                                 </TouchableOpacity>
                                 )}
+                                keyExtractor={(item, index) => index.toString()}
                             />
                         </View>
 

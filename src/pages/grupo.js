@@ -22,7 +22,7 @@ const url = site + currency + settings + price_change_percentage;
 
 
 
-export default class Bag extends React.Component{
+export default class Grupo extends React.Component{
 
     constructor(props){
         super(props);

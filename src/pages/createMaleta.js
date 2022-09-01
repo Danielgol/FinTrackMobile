@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, StatusBar, TextInput,
         TouchableOpacity, Button, FlatList, YellowBox, BackHandler,
-        Dimensions, Image, Animated } from 'react-native'
+        Dimensions, Image, Animated, AsyncStorage } from 'react-native'
 
 
 import seta from '../images/seta3-verde.png';
+import maleta from '../images/mala-verde.png';
 import CurrencyPopup from '../components/currencyPopup.js';
 
 const { width, height } = Dimensions.get("screen");
@@ -30,8 +31,6 @@ export default class CreateMaleta extends React.Component{
     }
 
     componentWillUnmount(){
-        const params = this.props.route.params;
-        params.refresh();
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     }
 
@@ -73,24 +72,46 @@ export default class CreateMaleta extends React.Component{
         }
     }
 
-    postUpdate(name, value, prefix){
-        fetch('http://192.168.0.182:3000/postCreateBag', {
+    async createMaleta(){
+        var email = ''
+        var token = ''
+        try{
+            // TROCAR PARA TOKEN_MANAGER
+            email = await AsyncStorage.getItem('email');
+            token = await AsyncStorage.getItem('token');
+        }catch(error){}
+        
+        const name = this.state.name;
+        const value = this.state.value;
+        const prefix = this.state.prefix;
+
+        await fetch('https://fintrack-express.herokuapp.com/createMaleta', {
             method: 'POST',
-            headers: {
+            headers: new Headers({
                 Accept: 'application/json',
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            },
+            }),
             body: JSON.stringify({
                 name: name,
                 value: value,
                 prefix: prefix,
             })
         }).then(response => {
-        }).catch(error => {
-            console.error(error);
-        });
+            if(response.status === 201){
+                alert("Maleta criada com sucesso!")
+                const params = this.props.route.params;
+                params.refresh();
+                this.props.navigation.goBack(null)
+            }else{
+                return response.json()
+            }
+        }).then(response => {
+            alert(response.message)
+        })
     }
 
+    /*
     pressCreate(){
         if(this.state.value != ''
             && this.state.value != '.'
@@ -100,6 +121,7 @@ export default class CreateMaleta extends React.Component{
             this.props.navigation.navigate('HomeScreen');
         }
     }
+    */
 
     emerge(shows, scale){
         this.setState(shows);
@@ -146,11 +168,20 @@ export default class CreateMaleta extends React.Component{
                         }}>
                         <Image source={seta} style={{height: 30, width: 30}}/>
                     </TouchableOpacity>
+                        {/*
+                    <View style={[styles.middle, {fontWeight: 'bold'}]}>
+                        <Image source={maleta} style={{height: 40, width: 40}}/>
+                        <Text style={{color: '#AEE637', fontSize: width/22}}>
+                            Criação de Maleta
+                        </Text>
+                    </View>
+                    */}
                 </View>
 
 
                 {/* ----------- BODY ----------- */}
                 <View style={{alignItems: 'center', height: height}}>
+                    
                     <View style={{alignItems: 'flex-start'}}>
                         <View style={{top: 10, height: 30}}>
                             <Text style={{color: '#AEE637', fontSize: width*0.04}}>
@@ -220,7 +251,7 @@ export default class CreateMaleta extends React.Component{
 
                     <View style={{top: '35%'}}>
                         <TouchableOpacity 
-                            onPress={() => this.pressCreate() }
+                            onPress={() => this.createMaleta() }
                             style={{
                                 width: width*0.5,
                                 backgroundColor: '#AEE637',
